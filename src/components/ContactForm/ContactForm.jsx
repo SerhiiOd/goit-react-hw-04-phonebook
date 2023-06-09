@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
 import {
@@ -9,79 +9,78 @@ import {
   Button,
 } from './ContactForm.styled';
 
-class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
-  };
+export default function ContactForm({ onSubmit }) {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  nameInputId = nanoid();
-  numberInputId = nanoid();
+  const nameInputId = nanoid();
+  const numberInputId = nanoid();
 
-  handleInputChange = event => {
+  const handleInputChange = event => {
     const { name, value } = event.currentTarget;
 
-    this.setState({
-      [name]: value,
-    });
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+      default:
+        return;
+    }
   };
 
-  handleSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
-    this.props.createUser({
-      name: this.state.name,
-      number: this.state.number,
-    });
-    this.reset();
+    onSubmit({ name, number });
+    reset();
   };
 
-  reset = () => {
-    this.setState({ name: '', number: '' });
+  const reset = () => {
+    setName('');
+    setNumber('');
   };
 
-  render() {
-    return (
-      <FormBlock onSubmit={this.handleSubmit}>
-        <InputBlock>
-          <InputLabel htmlFor={this.nameInputId}>
-            Name
-            <Input
-              type="text"
-              name="name"
-              pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-              title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-              required
-              value={this.state.name}
-              onChange={this.handleInputChange}
-              id={this.nameInputId}
-              placeholder="Name"
-            />
-          </InputLabel>
+  return (
+    <FormBlock onSubmit={handleSubmit}>
+      <InputBlock>
+        <InputLabel htmlFor={nameInputId}>
+          Name
+          <Input
+            type="text"
+            name="name"
+            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
+            required
+            value={name}
+            onChange={handleInputChange}
+            id={nameInputId}
+            placeholder="Name"
+          />
+        </InputLabel>
 
-          <InputLabel htmlFor={this.numberInputId}>
-            Number
-            <Input
-              type="tel"
-              name="number"
-              pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-              title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-              required
-              value={this.state.number}
-              onChange={this.handleInputChange}
-              id={this.numberInputId}
-              placeholder="+0-00-00-00"
-            />
-          </InputLabel>
-        </InputBlock>
+        <InputLabel htmlFor={numberInputId}>
+          Number
+          <Input
+            type="tel"
+            name="number"
+            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            required
+            value={number}
+            onChange={handleInputChange}
+            id={numberInputId}
+            placeholder="+0-00-00-00"
+          />
+        </InputLabel>
+      </InputBlock>
 
-        <Button type="submit">Add contact</Button>
-      </FormBlock>
-    );
-  }
+      <Button type="submit">Add contact</Button>
+    </FormBlock>
+  );
 }
 
 ContactForm.propTypes = {
   handleSubmit: PropTypes.func,
 };
-
-export default ContactForm;

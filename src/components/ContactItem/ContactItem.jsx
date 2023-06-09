@@ -6,7 +6,7 @@ const ContactItem = ({ name, number, id, onClick }) => {
     <Item key={id}>
       <ItemBlock>
         <p>
-          {name}: {number}
+          {name} : {number}
         </p>
         <Button type="button" onClick={() => onClick(id)}>
           Delete
