@@ -70,7 +70,7 @@ export default function App() {
     <Container>
       <Section title="Phonebook">
         <Title>Phonebook</Title>
-        <ContactForm createUser={addContact} />
+        <ContactForm onSubmit={addContact} />
       </Section>
 
       <Section title="Contacts">
